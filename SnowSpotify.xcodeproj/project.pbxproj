@@ -13,6 +13,7 @@
 		3D3C81F12A2BDD4100FE5498 /* Cocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3D6974DD2A2BF22300199F63 /* nscolor-colorWithCssDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D6974DC2A2BF22300199F63 /* nscolor-colorWithCssDefinition.m */; };
 		3DCE45972A2EE04E001873D7 /* Secrets.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE45962A2EE04E001873D7 /* Secrets.m */; };
+		3DF872392A303B1F0010C05E /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF872382A303B1F0010C05E /* JSONKit.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 /* End PBXBuildFile section */
@@ -46,6 +47,8 @@
 		3D6974DC2A2BF22300199F63 /* nscolor-colorWithCssDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "nscolor-colorWithCssDefinition.m"; sourceTree = "<group>"; };
 		3DCE45952A2EE04E001873D7 /* Secrets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Secrets.h; sourceTree = "<group>"; };
 		3DCE45962A2EE04E001873D7 /* Secrets.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Secrets.m; sourceTree = "<group>"; };
+		3DF872372A303AF40010C05E /* JSONKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		3DF872382A303B1F0010C05E /* JSONKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* SnowSpotify-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SnowSpotify-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* SnowSpotify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnowSpotify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -71,6 +74,8 @@
 				256AC3D90F4B6AC300CF3369 /* ObjectivelyCruelAppDelegate.m */,
 				3DCE45952A2EE04E001873D7 /* Secrets.h */,
 				3DCE45962A2EE04E001873D7 /* Secrets.m */,
+				3DF872372A303AF40010C05E /* JSONKit.h */,
+				3DF872382A303B1F0010C05E /* JSONKit.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -208,6 +213,7 @@
 				3D6974DD2A2BF22300199F63 /* nscolor-colorWithCssDefinition.m in Sources */,
 				256AC3DA0F4B6AC300CF3369 /* ObjectivelyCruelAppDelegate.m in Sources */,
 				3DCE45972A2EE04E001873D7 /* Secrets.m in Sources */,
+				3DF872392A303B1F0010C05E /* JSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

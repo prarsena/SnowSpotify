@@ -20,8 +20,7 @@
     NSTextView *pageHeader;
 	NSTextView *subheader;
     NSString *receivedDataString;
-    //NSString *bearer_token;
-	
+    NSData *receivedData;
 	NSMenu *menu;
 }
 
@@ -34,6 +33,12 @@
 @property (assign) NSTextView *subheader;
 @property (assign) NSString *code;
 @property (assign) NSString *receivedDataString;
+@property (assign) NSData *receivedData;
+@property (assign) NSImageView *albumimageView;
+@property (assign) NSTextView *albumnameView;
+@property (assign) NSTextView *artistnameView;
+@property (assign) NSTextView *tracknameView;
+
 @property (assign) NSString *bearer_token;
 
 @property (assign) ObjectivelyCruelAppDelegate *delegate;
@@ -48,7 +53,7 @@
 - (void)buttonClicked:(id)sender;
 - (void)showPreferences:(id)sender;
 - (void)quitApplication:(id)sender;
-- (void) getCurrentSong: (id) sender;
+- (void)getCurrentSong:(id)sender;
 
 - (NSString *) getGlobalCode: (id) sender;
 - (NSString *)code; // Declare the getter method

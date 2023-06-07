@@ -34,7 +34,7 @@ void HandleOpenURL(const AppleEvent *event, AppleEvent *reply, SRefCon refCon) {
     }
     NSArray *components = [url.query componentsSeparatedByString:@"="];
     code = (NSString *) components[1];
-    NSLog(@"Code from URL: %@", code);
+    //NSLog(@"Code from URL: %@", code);
     globalCode = code; // Store the code in the global variable
 
     NSString *newCode = globalCode; // Assign the value from globalCode to a local variable

@@ -10,6 +10,7 @@
 #import "nscolor-colorWithCssDefinition.h"
 #import "Secrets.h"
 #import <Foundation/Foundation.h>
+#import "JSONKit.h"
 
 @implementation ObjectivelyCruelAppDelegate
 
@@ -23,6 +24,13 @@
 @synthesize colorPanelWindowController;
 @synthesize menu;
 @synthesize receivedDataString;
+@synthesize receivedData;
+
+@synthesize albumimageView;
+@synthesize albumnameView;
+@synthesize artistnameView;
+@synthesize tracknameView;
+
 @synthesize bearer_token = _bearer_token;
 @synthesize code = _code;
 
@@ -39,6 +47,23 @@
     NSString *currentCode = self.code;
     //self.bearer_token = @"init";
     NSLog(@"Code: %@", currentCode);
+    if (currentCode == nil) {
+        Secrets *credentials = [[Secrets alloc] init];
+        NSString *client_id = [credentials client_id];
+        
+        NSProcessInfo *myProcess = [NSProcessInfo processInfo];
+        NSString *version = [myProcess operatingSystemVersionString];
+        
+        [self.subheader setString:version];
+        
+        NSString *authorizeString = [NSString stringWithFormat:@"https://accounts.spotify.com/authorize?response_type=code&client_id=%@&scope=user-read-private%%20user-read-email%%20user-read-currently-playing%%20user-modify-playback-state&redirect_uri=snowspotify://callback", client_id];
+        
+        NSURL *url = [NSURL URLWithString:authorizeString];
+        
+        [[NSWorkspace sharedWorkspace] openURL:url];
+    } else {
+        NSLog(@"Have Code: %@", currentCode);
+    }
 
     /* Create the menu bar */
     NSMenu *menuBar = [[NSMenu alloc] init];
@@ -67,7 +92,7 @@
     [[NSApplication sharedApplication] setMainMenu:menuBar];
     
     /* Create the window. It will be different depending on which OS X version. */
-    NSRect windowFrame = NSMakeRect(0,NSMaxY([[NSScreen mainScreen] frame]),400,300);
+    NSRect windowFrame = NSMakeRect(0,NSMaxY([[NSScreen mainScreen] frame]),600,300);
     
     NSRect headerFrame = NSMakeRect(20,230,340,50);
 	NSRect subheaderFrame = NSMakeRect(60,175,260,40);
@@ -89,7 +114,7 @@
 #else
     self.window = [[NSWindow alloc] initWithContentRect: windowFrame
                                               styleMask:   NSTitledWindowMask |
-                                                           NSResizableWindowMask |
+                                                           //NSResizableWindowMask |
                                                            NSMiniaturizableWindowMask |
                                                            NSClosableWindowMask
                                                 backing: NSBackingStoreBuffered
@@ -121,26 +146,37 @@
     [self.subheader setTextColor:[NSColor colorWithCssDefinition:@"tomato"]];
 	//[self.subheader setAlignment: NSCenterTextAlignment];
 	[self.window.contentView addSubview:self.subheader];
+    NSURL *imageUrl = [NSURL URLWithString:@"https://media.pitchfork.com/photos/642250c773370f462fd423cb/2:1/w_640,c_limit/phoebe-bridgers-taylor-swift.jpg"];
+    NSImage *image = [[NSImage alloc] initWithContentsOfURL:imageUrl];
+    NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, image.size.width, image.size.height)];
+    imageView.image = image;
+    [self.window.contentView addSubview:imageView];
     
-    /* These attributes describe the text field, the space where a user can write. */
-    self.textField = [[NSTextField alloc] initWithFrame:NSMakeRect(20, 32, 200, 30)];
-    [self.textField setBackgroundColor: [NSColor colorWithCssDefinition:@"azure"]];
-    [self.textField setFont: [NSFont systemFontOfSize:14]];
-    [self.textField setTextColor:[NSColor colorWithCssDefinition:@"midnightblue"]];
-    [self.window.contentView addSubview:self.textField];
+    self.tracknameView =
+        [[NSTextView alloc] initWithFrame:CGRectMake(20, 20, 200, 20)];
+    [self.tracknameView setBackgroundColor: [NSColor colorWithCssDefinition:@"dodgerblue"]];
+    [self.window.contentView addSubview:self.tracknameView];
     
-    /* These attributes describe the text view, the space where the message is displayed. */
-    self.textView = [[NSTextView alloc] initWithFrame:NSMakeRect(20, 67, 200, 62)];
-    self.textView.backgroundColor = [NSColor colorWithCssDefinition:@"cornsilk"];
-    self.textView.textColor = [NSColor colorWithCssDefinition:@"midnightblue"];
-    self.textView.string = @"Hello, me!";
-    [self.textView setFont:[NSFont systemFontOfSize:25]];
-    [self.textView setEditable: NO];
-    [self.textView setSelectable: NO];
-    [self.window.contentView addSubview:self.textView];
+    self.artistnameView =
+        [[NSTextView alloc] initWithFrame:CGRectMake(20, 50, 200, 20)];
+    [self.artistnameView setBackgroundColor: [NSColor colorWithCssDefinition:@"dodgerblue"]];
+    [self.window.contentView addSubview:self.artistnameView];
     
+    self.albumnameView =
+        [[NSTextView alloc] initWithFrame:CGRectMake(20, 80, 200, 20)];
+    [self.albumnameView setBackgroundColor: [NSColor colorWithCssDefinition:@"dodgerblue"]];
+    [self.window.contentView addSubview:self.albumnameView];
+    
+    
+    NSURL *albumimageUrl = [NSURL URLWithString:@"https://i.scdn.co/image/ab67616d0000b27371c448352f13e4eea54392cc"];
+    NSImage *albumimage = [[NSImage alloc] initWithContentsOfURL:albumimageUrl];
+    self.albumimageView = [[NSImageView alloc] initWithFrame:NSMakeRect(20, 100, 200, 200)];
+    self.albumimageView.image = albumimage;
+    [self.window.contentView addSubview:self.albumimageView];
+    
+
     // Create the close window button without declaring it. Also, don't display it. 
-    NSButton *closeButton = [[NSButton alloc] initWithFrame:NSMakeRect(230, 30, 100, 32)];
+    NSButton *closeButton = [[NSButton alloc] initWithFrame:NSMakeRect(400, 30, 100, 32)];
 	[closeButton setTitle: @"Close"];
     closeButton.target = self;
     [closeButton setFont: [NSFont systemFontOfSize:14]];
@@ -148,19 +184,9 @@
 	[closeButton setKeyEquivalentModifierMask: NSCommandKeyMask];
 	[closeButton setKeyEquivalent:@"w"];
     [self.window.contentView addSubview:closeButton];
-    
-    // Create the button
-    self.button = [[NSButton alloc] initWithFrame:NSMakeRect(230, 65, 100, 32)];
-    self.button.title = @"Write Msg";
-    [self.button setBordered: YES];
-    [self.button setFont: [NSFont systemFontOfSize:14]];
-	[self.button setKeyEquivalent:@"\r"];
-    [self.button setTarget:self];
-    [self.button setAction:@selector(buttonClicked:)];
-    [self.window.contentView addSubview:self.button];
-    
+
 	// Create the close window button without declaring it.
-    NSButton *urlButton = [[NSButton alloc] initWithFrame:NSMakeRect(230, 100, 100, 32)];
+    NSButton *urlButton = [[NSButton alloc] initWithFrame:NSMakeRect(400, 65, 100, 32)];
     [urlButton setTitle: @"URL"];
     urlButton.target = self;
     [urlButton setFont: [NSFont systemFontOfSize:14]];
@@ -168,7 +194,7 @@
     [self.window.contentView addSubview:urlButton];
 
     // Create the close window button without declaring it.
-    NSButton *tokenButton = [[NSButton alloc] initWithFrame:NSMakeRect(230, 135, 100, 32)];
+    NSButton *tokenButton = [[NSButton alloc] initWithFrame:NSMakeRect(400, 100, 100, 32)];
     [tokenButton setTitle: @"Token req"];
     tokenButton.target = self;
     [tokenButton setFont: [NSFont systemFontOfSize:14]];
@@ -176,7 +202,7 @@
     [self.window.contentView addSubview:tokenButton];
     
     // Create the close window button without declaring it.
-    NSButton *getSongButton = [[NSButton alloc] initWithFrame:NSMakeRect(230, 165, 100, 32)];
+    NSButton *getSongButton = [[NSButton alloc] initWithFrame:NSMakeRect(400, 135, 100, 32)];
     [getSongButton setTitle: @"Get song"];
     getSongButton.target = self;
     [getSongButton setFont: [NSFont systemFontOfSize:14]];
@@ -202,6 +228,7 @@
         _code = [code retain]; // Retain and assign the new value
     }
     NSLog(@"Got my code: %@", _code);
+    [self.artistnameView setString: @"Received Code" ];
 }
 
 - (NSString *) getGlobalBearer: (id) sender {
@@ -219,7 +246,6 @@
         [_bearer_token release]; // Release the previous value
         _bearer_token = [bearer_token retain]; // Retain and assign the new value
     }
-    NSLog(@"Got my code: %@", _code);
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {}
@@ -242,6 +268,8 @@
 
 
 - (void)sendAccessTokenRequest:(id)sender {
+
+    
     Secrets *credentials = [[Secrets alloc] init];
     NSString *client_id = [credentials client_id];
     NSString *client_secret = [credentials client_secret];
@@ -298,24 +326,76 @@
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     // Handle the received data
     NSLog(@"Did receive data");
+    self.receivedData = data;
     NSString *stringData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSLog(@"%@", stringData);
     self.receivedDataString = stringData; // Store the received data in the instance variable
-    [self processReceivedData]; // Call the second method
+    NSString *accessToken = @"{\"access";
+    
+    if ([stringData hasPrefix:accessToken]){
+        NSLog(@"String contains Access Token");
+        [self processReceivedData]; // Call the second method
+    } else {
+        [self processReceivedDataAsJson]; // Call the second method
+        NSLog(@"Not an Access Token string. ");
+    }
+}
+
+- (void)processReceivedDataAsJson {
+    NSString *receivedDataString = self.receivedDataString;
+    //NSLog(@"RECIEVE'D %@", receivedDataString );
+    
+    id jsonObject = [receivedDataString objectFromJSONString]; // Parse the JSON data
+    NSLog(@"RECIEVE'D JSON %@", jsonObject);
+    
+    
+    NSDictionary *json = (NSDictionary *)jsonObject;
+    NSString *timestamp = (NSString *) json[@"timestamp"];
+    NSString *trackName = json[@"item"][@"name"];
+    NSString *artistName = json[@"item"][@"artists"][0][@"name"];
+    NSString *albumName = json[@"item"][@"album"][@"name"];
+    NSString *artistArtwork = json[@"item"][@"album"][@"images"][0][@"url"];
+    NSString *playPauseStatus = (NSString *) json[@"is_playing"];
+    
+    NSLog(@"timestamp: %@", timestamp);
+    NSLog(@"Track Name: %@", trackName);
+    NSLog(@"Artist Name: %@", artistName);
+    NSLog(@"Album Name: %@", albumName);
+    NSLog(@"Artist Artwork: %@", artistArtwork);
+    NSLog(@"Play/Pause Status: %@", playPauseStatus);
+    
+    
+    
+    if (playPauseStatus != nil){
+        NSURL *albumimageUrl = [NSURL URLWithString:artistArtwork];
+        NSImage *albumimage = [[NSImage alloc] initWithContentsOfURL:albumimageUrl];
+        albumimageView.image = albumimage;
+        albumnameView.string = albumName;
+        artistnameView.string = artistName;
+        tracknameView.string = trackName;
+    } else {
+        /*
+        NSURL *albumimageUrl = [NSURL URLWithString:@"https://www.meme-arsenal.com/memes/3db0f77b4739b6ad47b6fde22eb2de0d.jpg"];
+        NSImage *albumimage = [[NSImage alloc] initWithContentsOfURL:albumimageUrl];
+         
+        albumimageView.image = albumimage;
+        */
+         tracknameView.string = @"Nothing playing";
+        NSLog(@"Nothing playing");
+    }
+
+
 }
 
 - (void)processReceivedData {
-    
     NSString *receivedData = self.receivedDataString;
     NSArray *components = [receivedData componentsSeparatedByString:@":"];
     if (components.count >= 2) {
         NSArray *bearerOfGifts = [components[1] componentsSeparatedByString:@"\""];
         
         if (bearerOfGifts.count >= 2) {
-            //self.bearer_token = bearerOfGifts[1];
-            //NSLog(@"my bearer token: %@", self.bearer_token);
-            //NSString* newBearerToken = bearerOfGifts[1];
             [[ObjectivelyCruelAppDelegate sharedInstance] setBearer_token:bearerOfGifts[1]];
+            [self.albumnameView setString:@"Bearer token recieved!" ];
         } else {
             NSLog(@"Invalid bearerOfGifts array: %@", bearerOfGifts);
         }
@@ -326,8 +406,6 @@
 
 - (void) getCurrentSong: (id) sender {
     NSString *currentBear = [[ObjectivelyCruelAppDelegate sharedInstance] bearer_token];
-
-    NSLog(@"my bearer token: %@", currentBear);
     
     if (currentBear && currentBear.length > 0) {
        
