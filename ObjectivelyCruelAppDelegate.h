@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
 
-@interface ObjectivelyCruelAppDelegate : NSObject <NSApplicationDelegate, NSURLConnectionDelegate> {
+@interface ObjectivelyCruelAppDelegate : NSObject <NSApplicationDelegate> {
     NSWindow *window;
 	NSTextField *textField;
     
@@ -22,6 +22,14 @@
     NSString *receivedDataString;
     NSData *receivedData;
 	NSMenu *menu;
+    
+    NSImageView *albumimageView;
+    NSTextView *albumnameView;
+    NSTextView *artistnameView;
+    NSTextView *tracknameView;
+    
+    NSString *code;
+    NSString *bearer_token;
 }
 
 @property (assign) NSWindow *window;

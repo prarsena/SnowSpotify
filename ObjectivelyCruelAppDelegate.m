@@ -10,7 +10,9 @@
 #import "nscolor-colorWithCssDefinition.h"
 #import "Secrets.h"
 #import <Foundation/Foundation.h>
+#import <Security/Security.h>
 #import "JSONKit.h"
+#import "NSData+Base64.h"
 
 @implementation ObjectivelyCruelAppDelegate
 
@@ -21,7 +23,6 @@
 @synthesize textView;
 @synthesize pageHeader;
 @synthesize subheader;
-@synthesize colorPanelWindowController;
 @synthesize menu;
 @synthesize receivedDataString;
 @synthesize receivedData;
@@ -44,8 +45,9 @@
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    
     NSString *currentCode = self.code;
-    //self.bearer_token = @"init";
+    
     NSLog(@"Code: %@", currentCode);
     if (currentCode == nil) {
         Secrets *credentials = [[Secrets alloc] init];
@@ -98,7 +100,7 @@
 	NSRect subheaderFrame = NSMakeRect(60,175,260,40);
     self.pageHeader = [[NSTextView alloc] initWithFrame:headerFrame];
     
-#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_6
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_7
     self.window = [[NSWindow alloc] initWithContentRect: windowFrame
                                               styleMask: NSWindowStyleMaskTitled |
                                                            NSWindowStyleMaskClosable |
@@ -152,20 +154,21 @@
     imageView.image = image;
     [self.window.contentView addSubview:imageView];
     
-    self.tracknameView =
-        [[NSTextView alloc] initWithFrame:CGRectMake(20, 20, 200, 20)];
-    [self.tracknameView setBackgroundColor: [NSColor colorWithCssDefinition:@"dodgerblue"]];
-    [self.window.contentView addSubview:self.tracknameView];
     
     self.artistnameView =
-        [[NSTextView alloc] initWithFrame:CGRectMake(20, 50, 200, 20)];
+    [[NSTextView alloc] initWithFrame:CGRectMake(20, 20, 200, 20)];
     [self.artistnameView setBackgroundColor: [NSColor colorWithCssDefinition:@"dodgerblue"]];
     [self.window.contentView addSubview:self.artistnameView];
     
     self.albumnameView =
-        [[NSTextView alloc] initWithFrame:CGRectMake(20, 80, 200, 20)];
+    [[NSTextView alloc] initWithFrame:CGRectMake(20, 50, 200, 20)];
     [self.albumnameView setBackgroundColor: [NSColor colorWithCssDefinition:@"dodgerblue"]];
     [self.window.contentView addSubview:self.albumnameView];
+    
+    self.tracknameView =
+        [[NSTextView alloc] initWithFrame:CGRectMake(20, 80, 200, 20)];
+    [self.tracknameView setBackgroundColor: [NSColor colorWithCssDefinition:@"dodgerblue"]];
+    [self.window.contentView addSubview:self.tracknameView];
     
     
     NSURL *albumimageUrl = [NSURL URLWithString:@"https://i.scdn.co/image/ab67616d0000b27371c448352f13e4eea54392cc"];
@@ -215,6 +218,7 @@
 - (NSString *) getGlobalCode: (id) sender {
     NSString *currentCode = [[ObjectivelyCruelAppDelegate sharedInstance] code];
     NSLog(@"%@",currentCode);
+    self.artistnameView.string = @"Authenticated!";
     return currentCode;
 }
 
@@ -228,7 +232,8 @@
         _code = [code retain]; // Retain and assign the new value
     }
     NSLog(@"Got my code: %@", _code);
-    [self.artistnameView setString: @"Received Code" ];
+    self.artistnameView.string = @"Authenticated on set!";
+    //[self.artistnameView setString:[[self.textView string] stringByAppendingString: @"Authenticated!"]];
 }
 
 - (NSString *) getGlobalBearer: (id) sender {
@@ -251,31 +256,39 @@
 - (void)applicationWillTerminate:(NSNotification *)aNotification {}
 
 - (void)urlButtonClicked:(id)sender {
-    Secrets *credentials = [[Secrets alloc] init];
-    NSString *client_id = [credentials client_id];
+    NSString *currentCode = self.code;
     
-    NSProcessInfo *myProcess = [NSProcessInfo processInfo];
-    NSString *version = [myProcess operatingSystemVersionString];
-
-    [self.subheader setString:version];
-    
-    NSString *authorizeString = [NSString stringWithFormat:@"https://accounts.spotify.com/authorize?response_type=code&client_id=%@&scope=user-read-private%%20user-read-email%%20user-read-currently-playing%%20user-modify-playback-state&redirect_uri=snowspotify://callback", client_id];
-    
-    NSURL *url = [NSURL URLWithString:authorizeString];
-    
-    [[NSWorkspace sharedWorkspace] openURL:url];
+     //self.bearer_token = @"init";
+    NSLog(@"Code: %@", currentCode);
+    if (currentCode == nil) {
+        Secrets *credentials = [[Secrets alloc] init];
+        NSString *client_id = [credentials client_id];
+        
+        NSProcessInfo *myProcess = [NSProcessInfo processInfo];
+        NSString *version = [myProcess operatingSystemVersionString];
+        
+        [self.subheader setString:version];
+        
+        NSString *authorizeString = [NSString stringWithFormat:@"https://accounts.spotify.com/authorize?response_type=code&client_id=%@&scope=user-read-private%%20user-read-email%%20user-read-currently-playing%%20user-modify-playback-state&redirect_uri=snowspotify://callback", client_id];
+        
+        NSURL *url = [NSURL URLWithString:authorizeString];
+        
+        [[NSWorkspace sharedWorkspace] openURL:url];
+    } else {
+        NSLog(@"Have Code: %@", currentCode);
+    }
 }
 
-
 - (void)sendAccessTokenRequest:(id)sender {
-
-    
     Secrets *credentials = [[Secrets alloc] init];
+    
     NSString *client_id = [credentials client_id];
     NSString *client_secret = [credentials client_secret];
     NSString *secretSauce = [NSString stringWithFormat:@"%@:%@", client_id, client_secret];
     NSData *data = [secretSauce dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *base64EncodedString = [data base64EncodedStringWithOptions:0];
+    //NSString *base64EncodedString = [data base64EncodedStringWithOptions:0];
+    NSString *base64EncodedString = [data base64Encoding_xcd];
+    //NSString *base64EncodedString = secretSauce;
     
     NSString *basicAuth = [NSString stringWithFormat:@"Basic %@", base64EncodedString];
     
@@ -326,10 +339,13 @@
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     // Handle the received data
     NSLog(@"Did receive data");
-    self.receivedData = data;
+    //self.receivedData = data;
     NSString *stringData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSLog(@"%@", stringData);
+    //NSLog(@"%@", stringData);
     self.receivedDataString = stringData; // Store the received data in the instance variable
+    NSData* dataUtf = [stringData dataUsingEncoding: NSUTF8StringEncoding];
+    self.receivedData = dataUtf;
+    
     NSString *accessToken = @"{\"access";
     
     if ([stringData hasPrefix:accessToken]){
@@ -342,29 +358,50 @@
 }
 
 - (void)processReceivedDataAsJson {
-    NSString *receivedDataString = self.receivedDataString;
-    //NSLog(@"RECIEVE'D %@", receivedDataString );
     
-    id jsonObject = [receivedDataString objectFromJSONString]; // Parse the JSON data
-    NSLog(@"RECIEVE'D JSON %@", jsonObject);
+    NSString *trackName = nil;
+    NSString *artistName = nil;
+    NSString *albumName = nil;
+    NSString *artistArtwork = nil;
+    NSString *playPauseStatus = nil;
     
+    NSString *receivedDataStringName = self.receivedDataString;
+    //NSData *receivedDataName = self.receivedData;
     
-    NSDictionary *json = (NSDictionary *)jsonObject;
-    NSString *timestamp = (NSString *) json[@"timestamp"];
-    NSString *trackName = json[@"item"][@"name"];
-    NSString *artistName = json[@"item"][@"artists"][0][@"name"];
-    NSString *albumName = json[@"item"][@"album"][@"name"];
-    NSString *artistArtwork = json[@"item"][@"album"][@"images"][0][@"url"];
-    NSString *playPauseStatus = (NSString *) json[@"is_playing"];
+    /* JSONkit */
+    id jsonObject = [receivedDataStringName objectFromJSONString];
+    //NSLog(@"RECIEVE'D JSON %@", jsonObject);
+    NSError *error = nil;
+    //id jsonObject = [NSJSONSerialization JSONObjectWithData:receivedDataName options:0 error:&error];
     
-    NSLog(@"timestamp: %@", timestamp);
-    NSLog(@"Track Name: %@", trackName);
-    NSLog(@"Artist Name: %@", artistName);
-    NSLog(@"Album Name: %@", albumName);
-    NSLog(@"Artist Artwork: %@", artistArtwork);
-    NSLog(@"Play/Pause Status: %@", playPauseStatus);
+    if (error){
+        NSLog(@"JSON: %@", error);
+        return;
+    }
     
+    if([jsonObject isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *json = (NSDictionary *)jsonObject;
+        //NSLog(@"RECIEVE'D JSON %@", json);
+        NSDictionary *item = [json objectForKey:@"item"];
+        //NSLog(@"RECIEVE'D DICT iTEM %@", item);
     
+        //NSString *timestamp = (NSString *) json[@"timestamp"];
+        trackName =  [item objectForKey:@"name"];
+        artistName = [[item objectForKey:@"artists"] firstObject][@"name"];
+        albumName =  [item objectForKey:@"album"][@"name"];
+        artistArtwork = [[item objectForKey:@"album"][@"images"] firstObject][@"url"];
+        playPauseStatus = (NSString *) [json objectForKey:@"is_playing"];
+        
+         //NSLog(@"timestamp: %@", timestamp);
+        NSLog(@"Track Name: %@", trackName);
+        NSLog(@"Artist Name: %@", artistName);
+        NSLog(@"Album Name: %@", albumName);
+        NSLog(@"Artist Artwork: %@", artistArtwork);
+        NSLog(@"Play/Pause Status: %@", playPauseStatus);        
+        
+    } else {
+        NSLog(@"Not a dictionary");
+    }
     
     if (playPauseStatus != nil){
         NSURL *albumimageUrl = [NSURL URLWithString:artistArtwork];
@@ -374,28 +411,33 @@
         artistnameView.string = artistName;
         tracknameView.string = trackName;
     } else {
-        /*
+    
         NSURL *albumimageUrl = [NSURL URLWithString:@"https://www.meme-arsenal.com/memes/3db0f77b4739b6ad47b6fde22eb2de0d.jpg"];
         NSImage *albumimage = [[NSImage alloc] initWithContentsOfURL:albumimageUrl];
          
         albumimageView.image = albumimage;
-        */
-         tracknameView.string = @"Nothing playing";
+    
+        tracknameView.string = @"Nothing playing";
+        albumnameView.string = @"";
+        artistnameView.string =  @"";
+        tracknameView.backgroundColor = nil;
+        albumnameView.backgroundColor = nil;
+        artistnameView.backgroundColor = nil;
         NSLog(@"Nothing playing");
     }
-
-
 }
 
 - (void)processReceivedData {
-    NSString *receivedData = self.receivedDataString;
-    NSArray *components = [receivedData componentsSeparatedByString:@":"];
+    NSString *receivedDataFromConnection = self.receivedDataString;
+    NSArray *components = [receivedDataFromConnection componentsSeparatedByString:@":"];
     if (components.count >= 2) {
-        NSArray *bearerOfGifts = [components[1] componentsSeparatedByString:@"\""];
+        id object = [components objectAtIndex:1];
+        NSArray *bearerOfGifts = [object componentsSeparatedByString:@"\""];
         
         if (bearerOfGifts.count >= 2) {
-            [[ObjectivelyCruelAppDelegate sharedInstance] setBearer_token:bearerOfGifts[1]];
+            [[ObjectivelyCruelAppDelegate sharedInstance] setBearer_token:[bearerOfGifts objectAtIndex:1]];
             [self.albumnameView setString:@"Bearer token recieved!" ];
+            [self.artistnameView setString: @"Authenticated!" ];
         } else {
             NSLog(@"Invalid bearerOfGifts array: %@", bearerOfGifts);
         }
@@ -406,7 +448,7 @@
 
 - (void) getCurrentSong: (id) sender {
     NSString *currentBear = [[ObjectivelyCruelAppDelegate sharedInstance] bearer_token];
-    
+    usleep(500);
     if (currentBear && currentBear.length > 0) {
        
         NSString *bearerHeader = [NSString stringWithFormat:@"Bearer %@", currentBear];
@@ -430,5 +472,6 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {}
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {}
+
 
 @end

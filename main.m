@@ -30,10 +30,19 @@ void HandleOpenURL(const AppleEvent *event, AppleEvent *reply, SRefCon refCon) {
         free(cString);
         
         url = [NSURL URLWithString:urlString];
-        AEDisposeDesc((AEDesc *)&urlString);
+        //[urlString release];
+        //AEDisposeDesc((AEDesc *)&urlString);
     }
     NSArray *components = [url.query componentsSeparatedByString:@"="];
-    code = (NSString *) components[1];
+    NSLog(@"Code from URL: %@", components);
+    if (components.count > 1){
+        //code = @"i'm real";
+        NSString *newCode = [components objectAtIndex:1];
+        code = [newCode copy];
+    } else {
+        code = @"iamsofake";
+    }
+    
     //NSLog(@"Code from URL: %@", code);
     globalCode = code; // Store the code in the global variable
 

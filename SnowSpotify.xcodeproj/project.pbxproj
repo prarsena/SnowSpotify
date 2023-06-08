@@ -12,6 +12,7 @@
 		3D3C81F02A2BDD4100FE5498 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		3D3C81F12A2BDD4100FE5498 /* Cocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3D6974DD2A2BF22300199F63 /* nscolor-colorWithCssDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D6974DC2A2BF22300199F63 /* nscolor-colorWithCssDefinition.m */; };
+		3D9043082A313DC500E9D6D0 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D9043062A313DC500E9D6D0 /* NSData+Base64.m */; };
 		3DCE45972A2EE04E001873D7 /* Secrets.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE45962A2EE04E001873D7 /* Secrets.m */; };
 		3DF872392A303B1F0010C05E /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF872382A303B1F0010C05E /* JSONKit.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -45,6 +46,8 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		3D6974DB2A2BF22300199F63 /* nscolor-colorWithCssDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nscolor-colorWithCssDefinition.h"; sourceTree = "<group>"; };
 		3D6974DC2A2BF22300199F63 /* nscolor-colorWithCssDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "nscolor-colorWithCssDefinition.m"; sourceTree = "<group>"; };
+		3D9043062A313DC500E9D6D0 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		3D9043072A313DC500E9D6D0 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		3DCE45952A2EE04E001873D7 /* Secrets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Secrets.h; sourceTree = "<group>"; };
 		3DCE45962A2EE04E001873D7 /* Secrets.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Secrets.m; sourceTree = "<group>"; };
 		3DF872372A303AF40010C05E /* JSONKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
@@ -68,6 +71,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				3D9043062A313DC500E9D6D0 /* NSData+Base64.m */,
+				3D9043072A313DC500E9D6D0 /* NSData+Base64.h */,
 				3D6974DB2A2BF22300199F63 /* nscolor-colorWithCssDefinition.h */,
 				3D6974DC2A2BF22300199F63 /* nscolor-colorWithCssDefinition.m */,
 				256AC3D80F4B6AC300CF3369 /* ObjectivelyCruelAppDelegate.h */,
@@ -214,6 +219,7 @@
 				256AC3DA0F4B6AC300CF3369 /* ObjectivelyCruelAppDelegate.m in Sources */,
 				3DCE45972A2EE04E001873D7 /* Secrets.m in Sources */,
 				3DF872392A303B1F0010C05E /* JSONKit.m in Sources */,
+				3D9043082A313DC500E9D6D0 /* NSData+Base64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,6 +249,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -256,6 +263,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.SnowSpotify;
 				PRODUCT_NAME = SnowSpotify;
+				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
@@ -263,6 +271,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -273,6 +282,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.SnowSpotify;
 				PRODUCT_NAME = SnowSpotify;
+				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};
