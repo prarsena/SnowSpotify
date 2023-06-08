@@ -100,7 +100,7 @@
 	NSRect subheaderFrame = NSMakeRect(60,175,260,40);
     self.pageHeader = [[NSTextView alloc] initWithFrame:headerFrame];
     
-#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_7
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_6
     self.window = [[NSWindow alloc] initWithContentRect: windowFrame
                                               styleMask: NSWindowStyleMaskTitled |
                                                            NSWindowStyleMaskClosable |
@@ -383,16 +383,21 @@
         NSDictionary *json = (NSDictionary *)jsonObject;
         //NSLog(@"RECIEVE'D JSON %@", json);
         NSDictionary *item = [json objectForKey:@"item"];
-        //NSLog(@"RECIEVE'D DICT iTEM %@", item);
-    
+		//NSLog(@"RECIEVE'D DICT iTEM %@", item);
+		
         //NSString *timestamp = (NSString *) json[@"timestamp"];
         trackName =  [item objectForKey:@"name"];
-        artistName = [[item objectForKey:@"artists"] firstObject][@"name"];
-        albumName =  [item objectForKey:@"album"][@"name"];
-        artistArtwork = [[item objectForKey:@"album"][@"images"] firstObject][@"url"];
-        playPauseStatus = (NSString *) [json objectForKey:@"is_playing"];
+		//NSDictionary *artistsNames = (NSDictionary *)[item objectForKey:@"artists"];
+        //NSLog(@"RECIEVE'D DICT ARtists %@", artistsNames);
+		//artistName = [artistsNames objectForKey:@"name"];
+		artistName = [[[item objectForKey:@"artists"] objectAtIndex:0] objectForKey:@"name"];
+        albumName =  [[item objectForKey:@"album"] objectForKey:@"name"];
+        //artistArtwork = [[[[item objectForKey:@"album"] objectForKey:[@"images"]] objectAtIndex:0] objectForKey:@"url"];
+		artistArtwork = [[[[item objectForKey:@"album"] objectForKey:@"images"] objectAtIndex:0] objectForKey:@"url"];
         
-         //NSLog(@"timestamp: %@", timestamp);
+		playPauseStatus = (NSString *) [json objectForKey:@"is_playing"];
+        
+		//NSLog(@"timestamp: %@", timestamp);
         NSLog(@"Track Name: %@", trackName);
         NSLog(@"Artist Name: %@", artistName);
         NSLog(@"Album Name: %@", albumName);
@@ -403,6 +408,7 @@
         NSLog(@"Not a dictionary");
     }
     
+	
     if (playPauseStatus != nil){
         NSURL *albumimageUrl = [NSURL URLWithString:artistArtwork];
         NSImage *albumimage = [[NSImage alloc] initWithContentsOfURL:albumimageUrl];
@@ -425,6 +431,7 @@
         artistnameView.backgroundColor = nil;
         NSLog(@"Nothing playing");
     }
+
 }
 
 - (void)processReceivedData {
