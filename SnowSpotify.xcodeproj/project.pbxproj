@@ -11,6 +11,7 @@
 		256AC3DA0F4B6AC300CF3369 /* ObjectivelyCruelAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* ObjectivelyCruelAppDelegate.m */; };
 		3D3C81F02A2BDD4100FE5498 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		3D3C81F12A2BDD4100FE5498 /* Cocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3D43EB2E2A33D8B900870905 /* WebAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D43EB2D2A33D8B900870905 /* WebAuthViewController.m */; };
 		3D6974DD2A2BF22300199F63 /* nscolor-colorWithCssDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D6974DC2A2BF22300199F63 /* nscolor-colorWithCssDefinition.m */; };
 		3D9043082A313DC500E9D6D0 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D9043062A313DC500E9D6D0 /* NSData+Base64.m */; };
 		3DCE45972A2EE04E001873D7 /* Secrets.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE45962A2EE04E001873D7 /* Secrets.m */; };
@@ -44,6 +45,8 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		3D43EB2C2A33D8B900870905 /* WebAuthViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebAuthViewController.h; sourceTree = "<group>"; };
+		3D43EB2D2A33D8B900870905 /* WebAuthViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebAuthViewController.m; sourceTree = "<group>"; };
 		3D6974DB2A2BF22300199F63 /* nscolor-colorWithCssDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nscolor-colorWithCssDefinition.h"; sourceTree = "<group>"; };
 		3D6974DC2A2BF22300199F63 /* nscolor-colorWithCssDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "nscolor-colorWithCssDefinition.m"; sourceTree = "<group>"; };
 		3D9043062A313DC500E9D6D0 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
@@ -81,6 +84,8 @@
 				3DCE45962A2EE04E001873D7 /* Secrets.m */,
 				3DF872372A303AF40010C05E /* JSONKit.h */,
 				3DF872382A303B1F0010C05E /* JSONKit.m */,
+				3D43EB2C2A33D8B900870905 /* WebAuthViewController.h */,
+				3D43EB2D2A33D8B900870905 /* WebAuthViewController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -178,6 +183,8 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "SnowSpotify" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = en;
@@ -217,6 +224,7 @@
 				256AC3DA0F4B6AC300CF3369 /* ObjectivelyCruelAppDelegate.m in Sources */,
 				3DCE45972A2EE04E001873D7 /* Secrets.m in Sources */,
 				3DF872392A303B1F0010C05E /* JSONKit.m in Sources */,
+				3D43EB2E2A33D8B900870905 /* WebAuthViewController.m in Sources */,
 				3D9043082A313DC500E9D6D0 /* NSData+Base64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
