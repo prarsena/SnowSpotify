@@ -213,12 +213,18 @@
     [self.window.contentView addSubview:getSongButton];
     
     NSButton *nextSongButton = [[NSButton alloc] initWithFrame:NSMakeRect(510, 30, 60, 32)];
-    [nextSongButton setTitle: @"Get song"];
     [nextSongButton setImage:([NSImage imageNamed:@"NSSkipAheadTemplate"])];
     nextSongButton.target = self;
     [nextSongButton setFont: [NSFont systemFontOfSize:14]];
     [nextSongButton setAction:@selector(playNextSong:)];
     [self.window.contentView addSubview:nextSongButton];
+    
+    NSButton *previousSongButton = [[NSButton alloc] initWithFrame:NSMakeRect(330, 30, 60, 32)];
+    [previousSongButton setImage:([NSImage imageNamed:@"NSSkipBackTemplate"])];
+    previousSongButton.target = self;
+    [previousSongButton setFont: [NSFont systemFontOfSize:14]];
+    [previousSongButton setAction:@selector(playPreviousSong:)];
+    [self.window.contentView addSubview:previousSongButton];
     
     [self.window makeKeyAndOrderFront: NSApp];
 }
@@ -467,6 +473,29 @@
         NSString *bearerHeader = [NSString stringWithFormat:@"Bearer %@", currentBear];
         
         NSString *nowPlayingStringURL = @"https://api.spotify.com/v1/me/player/next";
+        
+        NSURL *nowPlayingURL = [NSURL URLWithString:nowPlayingStringURL];
+        
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:nowPlayingURL];
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setValue:bearerHeader forHTTPHeaderField:@"Authorization"];
+        
+        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        [connection start];
+    } else {
+        NSLog(@"i've never been so scared");
+    }
+}
+
+- (void)playPreviousSong:(id)sender {
+    NSString *currentBear = [[ObjectivelyCruelAppDelegate sharedInstance] bearer_token];
+    usleep(500);
+    if (currentBear && currentBear.length > 0) {
+        
+        NSString *bearerHeader = [NSString stringWithFormat:@"Bearer %@", currentBear];
+        
+        NSString *nowPlayingStringURL = @"https://api.spotify.com/v1/me/player/previous";
         
         NSURL *nowPlayingURL = [NSURL URLWithString:nowPlayingStringURL];
         

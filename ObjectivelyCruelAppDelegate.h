@@ -63,6 +63,7 @@
 - (void)quitApplication:(id)sender;
 - (void)getCurrentSong:(id)sender;
 - (void)playNextSong:(id)sender;
+- (void)playPreviousSong:(id)sender;
 
 - (NSString *)getGlobalCode: (id) sender;
 - (NSString *)code; // Declare the getter method
