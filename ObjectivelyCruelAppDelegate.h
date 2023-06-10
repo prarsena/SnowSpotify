@@ -62,12 +62,13 @@
 - (void)showPreferences:(id)sender;
 - (void)quitApplication:(id)sender;
 - (void)getCurrentSong:(id)sender;
+- (void)playNextSong:(id)sender;
 
-- (NSString *) getGlobalCode: (id) sender;
+- (NSString *)getGlobalCode: (id) sender;
 - (NSString *)code; // Declare the getter method
 - (void)setCode:(NSString *)code; // Declare the setter method
 
-- (NSString *) getGlobalBearer: (id) sender;
+- (NSString *)getGlobalBearer: (id) sender;
 - (NSString *)bearer_token; // Declare the getter method
 - (void)setBearer_token:(NSString *)bearer_token; // Declare the setter method
 

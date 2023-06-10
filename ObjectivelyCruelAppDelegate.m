@@ -212,6 +212,14 @@
     [getSongButton setAction:@selector(getCurrentSong:)];
     [self.window.contentView addSubview:getSongButton];
     
+    NSButton *nextSongButton = [[NSButton alloc] initWithFrame:NSMakeRect(510, 30, 60, 32)];
+    [nextSongButton setTitle: @"Get song"];
+    [nextSongButton setImage:([NSImage imageNamed:@"NSSkipAheadTemplate"])];
+    nextSongButton.target = self;
+    [nextSongButton setFont: [NSFont systemFontOfSize:14]];
+    [nextSongButton setAction:@selector(playNextSong:)];
+    [self.window.contentView addSubview:nextSongButton];
+    
     [self.window makeKeyAndOrderFront: NSApp];
 }
 
@@ -334,14 +342,32 @@
 
 #pragma mark - NSURLConnectionDelegate
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {}
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    
+    //NSLog(@"%@", response);
+    /*
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        NSInteger statusCode = httpResponse.statusCode;
+        // Use the statusCode variable as needed
+        NSLog(@"Status Code: %ld", (long)statusCode);
+        if (statusCode == 204){
+            ObjectivelyCruelAppDelegate *myObject = [[ObjectivelyCruelAppDelegate alloc] init];
+            [myObject getCurrentSong];
+        }
+    } else {
+        // Handle non-HTTP responses if needed
+        NSLog(@"Not an HTTP response");
+    }
+    */
+}
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     // Handle the received data
     NSLog(@"Did receive data");
     //self.receivedData = data;
     NSString *stringData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    //NSLog(@"%@", stringData);
+    NSLog(@"%@", stringData);
     self.receivedDataString = stringData; // Store the received data in the instance variable
     NSData* dataUtf = [stringData dataUsingEncoding: NSUTF8StringEncoding];
     self.receivedData = dataUtf;
@@ -353,7 +379,7 @@
         [self processReceivedData]; // Call the second method
     } else {
         [self processReceivedDataAsJson]; // Call the second method
-        NSLog(@"Not an Access Token string. ");
+        //NSLog(@"Not an Access Token string. ");
     }
 }
 
@@ -432,6 +458,28 @@
         NSLog(@"Nothing playing");
     }
 
+}
+- (void)playNextSong:(id)sender {
+    NSString *currentBear = [[ObjectivelyCruelAppDelegate sharedInstance] bearer_token];
+    usleep(500);
+    if (currentBear && currentBear.length > 0) {
+        
+        NSString *bearerHeader = [NSString stringWithFormat:@"Bearer %@", currentBear];
+        
+        NSString *nowPlayingStringURL = @"https://api.spotify.com/v1/me/player/next";
+        
+        NSURL *nowPlayingURL = [NSURL URLWithString:nowPlayingStringURL];
+        
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:nowPlayingURL];
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setValue:bearerHeader forHTTPHeaderField:@"Authorization"];
+        
+        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        [connection start];
+    } else {
+        NSLog(@"i've never been so scared");
+    }
 }
 
 - (void)processReceivedData {
