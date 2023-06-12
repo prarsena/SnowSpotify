@@ -78,8 +78,8 @@
     
     // Add Preferences menu item
     NSMenuItem *preferencesMenuItem =
-        [[NSMenuItem alloc] initWithTitle:@"Colors"
-                            action:@selector(showPreferences:)
+        [[NSMenuItem alloc] initWithTitle:@"Authenticate"
+                            action:@selector(urlButtonClicked:)
                             keyEquivalent:@"c"];
     [applicationMenu addItem:preferencesMenuItem];
     
@@ -122,7 +122,7 @@
                                                 backing: NSBackingStoreBuffered
                                                   defer: NO];
     self.window.title = @"Snow Leopard";
-    self.pageHeader.string = @"Whoa Leopard";
+    //self.pageHeader.string = @"Whoa Leopard";
     [self.pageHeader setAlignment: NSCenterTextAlignment];
     NSLog(@"Found os x snow" );
 #endif
@@ -130,24 +130,6 @@
     NSColor *backgroundColor = [NSColor colorWithCssDefinition:@"royalblue"];
     self.window.backgroundColor = backgroundColor;
 	
-    /* These attributes describe the Title section of the window. */
-    [self.pageHeader setFont:[NSFont systemFontOfSize:33]];
-    [self.pageHeader setEditable: NO];
-    [self.pageHeader setSelectable: NO];
-    [self.pageHeader setBackgroundColor: [NSColor colorWithCssDefinition:@"dodgerblue"]];
-    [self.pageHeader setTextColor:[NSColor colorWithCssDefinition:@"tomato"]];
-    [self.window.contentView addSubview:self.pageHeader];
-	
-	/* Work with subheader */
-	self.subheader = [[NSTextView alloc] initWithFrame:subheaderFrame];
-	[self.subheader setFont:[NSFont boldSystemFontOfSize:33]];
-	[self.subheader setEditable: NO];
-    [self.subheader setSelectable: NO];
-	[self.subheader setFont: [NSFont systemFontOfSize:14]];
-    [self.subheader setBackgroundColor: [NSColor colorWithCssDefinition:@"dodgerblue"]];
-    [self.subheader setTextColor:[NSColor colorWithCssDefinition:@"tomato"]];
-	//[self.subheader setAlignment: NSCenterTextAlignment];
-	[self.window.contentView addSubview:self.subheader];
     NSURL *imageUrl = [NSURL URLWithString:@"https://media.pitchfork.com/photos/642250c773370f462fd423cb/2:1/w_640,c_limit/phoebe-bridgers-taylor-swift.jpg"];
     NSImage *image = [[NSImage alloc] initWithContentsOfURL:imageUrl];
     NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, image.size.width, image.size.height)];
@@ -173,7 +155,7 @@
     
     NSURL *albumimageUrl = [NSURL URLWithString:@"https://i.scdn.co/image/ab67616d0000b27371c448352f13e4eea54392cc"];
     NSImage *albumimage = [[NSImage alloc] initWithContentsOfURL:albumimageUrl];
-    self.albumimageView = [[NSImageView alloc] initWithFrame:NSMakeRect(20, 100, 200, 200)];
+    self.albumimageView = [[NSImageView alloc] initWithFrame:NSMakeRect(20, 120, 150, 150)];
     self.albumimageView.image = albumimage;
     [self.window.contentView addSubview:self.albumimageView];
     
@@ -189,15 +171,18 @@
     [self.window.contentView addSubview:closeButton];
 
 	// Create the close window button without declaring it.
-    NSButton *urlButton = [[NSButton alloc] initWithFrame:NSMakeRect(400, 65, 100, 32)];
+	/*
+    NSButton *urlButton = [[NSButton alloc] initWithFrame:NSMakeRect(400, , 100, 32)];
     [urlButton setTitle: @"URL"];
     urlButton.target = self;
     [urlButton setFont: [NSFont systemFontOfSize:14]];
     [urlButton setAction:@selector(urlButtonClicked:)];
     [self.window.contentView addSubview:urlButton];
-
+	 */
+	
+	
     // Create the close window button without declaring it.
-    NSButton *tokenButton = [[NSButton alloc] initWithFrame:NSMakeRect(400, 100, 100, 32)];
+    NSButton *tokenButton = [[NSButton alloc] initWithFrame:NSMakeRect(400, 65, 100, 32)];
     [tokenButton setTitle: @"Token req"];
     tokenButton.target = self;
     [tokenButton setFont: [NSFont systemFontOfSize:14]];
@@ -205,7 +190,7 @@
     [self.window.contentView addSubview:tokenButton];
     
     // Create the close window button without declaring it.
-    NSButton *getSongButton = [[NSButton alloc] initWithFrame:NSMakeRect(400, 135, 100, 32)];
+    NSButton *getSongButton = [[NSButton alloc] initWithFrame:NSMakeRect(400, 100, 100, 32)];
     [getSongButton setTitle: @"Get song"];
     getSongButton.target = self;
     [getSongButton setFont: [NSFont systemFontOfSize:14]];
@@ -350,22 +335,24 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     
-    //NSLog(@"%@", response);
-    /*
+    NSLog(@"%@", response);
+    
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSInteger statusCode = httpResponse.statusCode;
         // Use the statusCode variable as needed
         NSLog(@"Status Code: %ld", (long)statusCode);
-        if (statusCode == 204){
+		/*
+		if (statusCode == 204){
             ObjectivelyCruelAppDelegate *myObject = [[ObjectivelyCruelAppDelegate alloc] init];
             [myObject getCurrentSong];
         }
+		 */
     } else {
         // Handle non-HTTP responses if needed
         NSLog(@"Not an HTTP response");
     }
-    */
+    
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
